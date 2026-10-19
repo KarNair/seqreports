@@ -10,8 +10,7 @@ nextflow.enable.dsl=2
 // Pipeline parameters
 params.run_folder = "/path/to/run_folder"
 params.result_dir = "results"
-fastqscreen_default_databases = "FastQ_Screen_Genomes"
-params.fastqscreen_databases = fastqscreen_default_databases
+params.fastqscreen_databases = "FastQ_Screen_Genomes"
 params.demultiplexer = "bcl2fastq"
 params.demultiplexer_outdir = "Unaligned"
 
@@ -64,9 +63,13 @@ def helpMessage() {
     """
 }
 
-if (params.help || !params.run_folder || !params.demultiplexer){
-    helpMessage()
-    exit 0
+workflow HELP {
+
+    main:
+        if (params.help || !params.run_folder || !params.demultiplexer){
+        helpMessage()
+        exit 0
+    }
 }
 
 workflow {
@@ -77,11 +80,9 @@ workflow {
         .set {run_folder}
     Channel.value(params.demultiplexer).set {demultiplexer}
     CHECK_RUN_QUALITY(run_folder, demultiplexer)
-
-}
-
-workflow.onComplete {
-	log.info ( workflow.success ? "\nDone! Open the reports in your browser.\n" : "Oops .. something went wrong." )
+    workflow.onComplete {
+        log.info ( workflow.success ? "\nDone! Open the reports in your browser.\n" : "Oops .. something went wrong." )
+    }
 }
 
 def get_project_and_reads(run_folder) {
