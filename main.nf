@@ -94,7 +94,7 @@ def get_project_and_reads(run_folder) {
         .map { file ->
             file.toString().indexOf('Undetermined') > 0 ?
                 ['NoProject', file] :
-                [(file.toString() =~ /^.*\/${params.demultiplexer_outdir}\/([^\/]+)\/.*\.fastq\.gz$/)[0][1], file]
+                [(file.toString() =~ "^.*/${params.demultiplexer_outdir}/([^/]+)/.*\\.fastq\\.gz\$")[0][1], file]
         }
 }
 
